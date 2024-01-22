@@ -23,8 +23,29 @@
   {
     "objectID": "structure.html",
     "href": "structure.html",
-    "title": "1  Book structure",
+    "title": "Book structure",
     "section": "",
     "text": "This book is not designed to be read from cover to cover. Instead it is written as a collection of individual recipes. Inspired by Tidy design principles each recipe can be read in isolation and will cover:\n\nWhat is the problem?\nWhat is an example?\nWhat is the solution?"
+  },
+  {
+    "objectID": "annotations-sizes.html#what-is-the-problem",
+    "href": "annotations-sizes.html#what-is-the-problem",
+    "title": "1  Align annotation sizes",
+    "section": "1.1 What is the problem?",
+    "text": "1.1 What is the problem?\nWhen adding a text annotation to a plot with ggplot2::annotate(), the size of the text in the annotation does not match other elements on the plot despite setting the size argument to equal values."
+  },
+  {
+    "objectID": "annotations-sizes.html#what-is-an-example",
+    "href": "annotations-sizes.html#what-is-an-example",
+    "title": "1  Align annotation sizes",
+    "section": "1.2 What is an example?",
+    "text": "1.2 What is an example?\n\nlibrary(ggplot2)\n\nggplot() +\n  ggtitle(\"This title is size 14\") +\n  theme(plot.title = element_text(size = unit(14, \"pt\"))) +\n  annotate(\n    \"text\",\n    label = \"This annotation is size 14\",\n    x = 0, y = 0,\n    size = unit(14, \"pt\")\n  )"
+  },
+  {
+    "objectID": "annotations-sizes.html#what-is-the-solution",
+    "href": "annotations-sizes.html#what-is-the-solution",
+    "title": "1  Align annotation sizes",
+    "section": "1.3 What is the solution?",
+    "text": "1.3 What is the solution?\nTo align the sizes of annotations and other elements on the plot, annotation sizes must be divided by .pt:\n\nggplot() +\n  ggtitle(\"This title is size 14\") +\n  theme(plot.title = element_text(size = unit(14, \"pt\"))) +\n  annotate(\n    \"text\",\n    label = \"This annotation is size 14\",\n    x = 0, y = 0,\n    size = unit(14, \"pt\") / .pt # divide by .pt\n  )\n\n\n\n\nThis works because annotate() calculates font size by multiplying the specified size by the global variable .pt (equal to 2.845276). See this Stack Overflow post for more information."
   }
 ]

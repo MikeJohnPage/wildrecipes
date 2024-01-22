@@ -1,0 +1,42 @@
+# Align annotation sizes
+
+## What is the problem?
+When adding a text annotation to a plot with `ggplot2::annotate()`,
+the size of the text in the annotation does not match other elements on the
+plot despite setting the `size` argument to equal values.
+
+## What is an example?
+
+```{r}
+library(ggplot2)
+
+ggplot() +
+  ggtitle("This title is size 14") +
+  theme(plot.title = element_text(size = unit(14, "pt"))) +
+  annotate(
+    "text",
+    label = "This annotation is size 14",
+    x = 0, y = 0,
+    size = unit(14, "pt")
+  )
+```
+
+## What is the solution?
+To align the sizes of annotations and other elements on the plot, annotation
+sizes must be divided by `.pt`:
+
+```{r}
+ggplot() +
+  ggtitle("This title is size 14") +
+  theme(plot.title = element_text(size = unit(14, "pt"))) +
+  annotate(
+    "text",
+    label = "This annotation is size 14",
+    x = 0, y = 0,
+    size = unit(14, "pt") / .pt # divide by .pt
+  )
+```
+
+This works because `annotate()` calculates font size by multiplying the specified
+size by the global variable `.pt` (equal to  `2.845276`). See [this](https://stackoverflow.com/questions/65076492/ggplot-size-of-annotate-vs-size-of-element-text) Stack Overflow post for more
+information.

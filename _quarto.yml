@@ -11,7 +11,7 @@ book:
 
     - part: ggplot2
       chapters:
-      - annotations.qmd
+      - annotations-sizes.qmd
       
     - references.qmd
 

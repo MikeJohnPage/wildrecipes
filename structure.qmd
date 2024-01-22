@@ -1,4 +1,4 @@
-# Book structure
+# Book structure {.unnumbered}
 
 This book is not designed to be read from cover to cover. Instead it is
 written as a collection of individual recipes. Inspired by
