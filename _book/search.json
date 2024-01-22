@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Wild recipes",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books."
+    "text": "Welcome\nThe title for this book is inspired by Russ Roberts book, Wild Problems. In this books he describes a class of problem he calls ‘wild problems’. These are big life decisions (e.g., should I move country) where an algorithmic approach to solving them, such as using a cost-benefit analysis, often fails. Instead he proposes a new framework to tackle these problems. (I will leave the curious reader to discover more on their own)\nMuch like the ‘wild problems’ discussed in Roberts’ book, the R programmer also faces a class of problem which could be described as wild. That is, when implementing solutions to problems outside of a sandboxed envrionment (e.g., the classroom, a toy example), the examples found in textbooks and documentation often fail, or require a more complex workaround. This could be due to bugs in the underlying libraries or code, or the complexity of the problem requiring something more than the simplistic examples documented elsewhere.\nThis book is a collection of recipes to some of these wild coding problems I’ve experienced in my work as an R programmer. It is by no means exhausative. Indeed, a plethora of resources already exist in this area (e.g., Stack Overflow, Posit Community, etc.). While the book has initially been created as a medium for me to document these problems for future reference, the book has been published in the open, in the hope some of the recipes help you solve problems you are facing."
   },
   {
     "objectID": "intro.html",
@@ -19,5 +19,12 @@
     "title": "References",
     "section": "",
     "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
+  },
+  {
+    "objectID": "structure.html",
+    "href": "structure.html",
+    "title": "1  Book structure",
+    "section": "",
+    "text": "This book is not designed to be read from cover to cover. Instead it is written as a collection of individual recipes. Inspired by Tidy design principles each recipe can be read in isolation and will cover:\n\nWhat is the problem?\nWhat is an example?\nWhat is the solution?"
   }
 ]

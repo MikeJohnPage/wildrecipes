@@ -7,7 +7,12 @@ book:
   date: "22/01/2024"
   chapters:
     - index.qmd
-    - intro.qmd
+    - structure.qmd
+
+    - part: ggplot2
+      chapters:
+      - annotations.qmd
+      
     - references.qmd
 
 bibliography: references.bib

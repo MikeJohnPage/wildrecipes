@@ -1,0 +1,12 @@
+# Book structure
+
+This book is not designed to be read from cover to cover. Instead it is
+written as a collection of individual recipes. Inspired by
+[Tidy design principles](https://design.tidyverse.org/) each recipe can be read
+in isolation and will cover:
+
+* What is the problem?
+
+* What is an example?
+
+* What is the solution?
