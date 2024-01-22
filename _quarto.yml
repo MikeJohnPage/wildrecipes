@@ -1,0 +1,22 @@
+project:
+  type: book
+
+book:
+  title: "Wild recipes"
+  author: "Mike Page"
+  date: "22/01/2024"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+
+
