@@ -1,4 +1,4 @@
-# Align annotation sizes
+# Annotations: text size
 
 ## What is the problem?
 When adding a text annotation to a plot with `ggplot2::annotate()`,
@@ -21,7 +21,7 @@ ggplot() +
   )
 ```
 
-## What is the solution?
+## What is a solution?
 To align the sizes of annotations and other elements on the plot, annotation
 sizes must be divided by `.pt`:
 

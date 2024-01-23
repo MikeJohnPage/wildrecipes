@@ -1,0 +1,55 @@
+# Annotations: infinite positions
+
+## What is the problem?
+To position annotations at the edge of a plot, the values `Inf` and `-Inf` can
+be passed to the positioning aesthetics (e.g., `x`) of `ggplot2::annotation()`.
+This technique fails for scales that are of class `Date`.
+
+## What is an example?
+It is useful to first see how we can position annotations on scales which aren't
+dates. For example, using the built-in economics dataset of ggplot2, we can postion an annotation in the top-right corner of the plot like so:
+
+```{r}
+library(ggplot2)
+
+ggplot(economics, aes(x = pop, y = unemploy)) +
+  geom_point() +
+  annotate(
+    "text",
+    label = "Top-right",
+    vjust = 1, hjust = 1, # Prevent text being chopped
+    x = Inf, y = Inf
+  )
+```
+
+When we try the same approach to a scale that uses dates, we get an error:
+
+```{r}
+#| error: true
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_point() +
+  annotate(
+    "text",
+    label = "Top-right",
+    vjust = 1, hjust = 1, # Prevent text being chopped
+    x = Inf, y = Inf
+  )
+```
+
+## What is a soltuion?
+To plot an annotation at the edge of a scale of class `Date`, you should change
+the class of `Inf` to a `Date` class:
+
+```{r}
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_point() +
+  annotate(
+    "text",
+    label = "Top-right",
+    vjust = 1, hjust = 1, # Prevent text being chopped
+    x = structure(Inf, class = "Date"), y = Inf
+  )
+```
+
+See [this](https://github.com/tidyverse/ggplot2/issues/4308) GitHub issue for
+more information.

@@ -8,17 +8,19 @@ proposes a new framework to tackle these problems. (I will leave the curious
 reader to discover more on their own)
 
 Much like the 'wild problems' discussed in Roberts' book, the R programmer
-also faces a class of problem which could be described as wild. That is, when
-implementing solutions to problems outside of a sandboxed envrionment (e.g.,
-the classroom, a toy example), the examples found in textbooks and documentation
-often fail, or require a more complex workaround. This could be due to bugs in
-the underlying libraries or code, or the complexity of the problem requiring
-something more than the simplistic examples documented elsewhere.
+also faces a class of coding problem which could be described as wild. That is,
+a set of problems found outside of a controlled environment such as a classroom
+or textbook and instead found in an environment which is uncontrolled and wild.
+Here, the examples found elsewhere often fail, or require a more complex
+workaround. This could be due to underlying bugs in R or its libraries, poor
+documentation, or quite simply and most often the case, the complexity of the
+problem space you are working in doesn't map easily to materials found
+elsewhere.
 
 This book is a collection of recipes to some of these wild coding problems
 I've experienced in my work as an R programmer. It is by no means exhausative.
-Indeed, a plethora of resources already exist in this area (e.g., Stack
-Overflow, Posit Community, etc.). While the book has initially been created as a
-medium for me to document these problems for future reference, the book has been
-published in the open, in the hope some of the recipes help you solve problems
-you are facing.
+Nor is it entriely unique. Indeed, a plethora of resources already exist in this
+area and this book even rehashes some of these (e.g., Stack Overflow, Posit
+Community, etc.). This book has primarily been created as a means for myself to 
+document problems I've faced and the wild recipes I've implemented along the 
+way. My hope is these recipes might also help you too.

@@ -12,7 +12,8 @@ book:
 
     - part: ggplot2
       chapters:
-      - annotations-sizes.qmd
+      - ggplot2-annotations-sizes.qmd
+      - gglot2-annotations-positions.qmd
       
     - references.qmd
 
