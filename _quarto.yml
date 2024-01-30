@@ -13,9 +13,9 @@ book:
     - part: ggplot2
       chapters:
       - ggplot2-annotations-sizes.qmd
-      - gglot2-annotations-positions.qmd
+      - ggplot2-annotations-positions.qmd
+      - ggplot2-objects.qmd
       # wrapping annotations in a list
-      # scanning plot objects for information
       
     - references.qmd
 

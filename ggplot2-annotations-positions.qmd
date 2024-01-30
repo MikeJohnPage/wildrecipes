@@ -7,7 +7,8 @@ This technique fails for scales that are of class `Date`.
 
 ## What is an example?
 It is useful to first see how we can position annotations on scales which aren't
-dates. For example, using the built-in economics dataset of ggplot2, we can postion an annotation in the top-right corner of the plot like so:
+dates. For example, using the built-in economics dataset of ggplot2, we can
+postion an annotation in the top-right corner of the plot like so:
 
 ```{r}
 library(ggplot2)

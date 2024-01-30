@@ -1,0 +1,66 @@
+# Inspecting ggplot2 objects
+
+## What is the problem?
+After creating a ggplot2 object, it can be useful to inspect the object created,
+for example, to change the behaviour of functions using that object, or for
+writing unit tests. Searching through the [documentation index](https://ggplot2.tidyverse.org/reference/index.html)
+reveals no help, and printing the name of the plot to the console just calls
+the default print method, re-printing the plot.
+
+## What is an example?
+Let's create and print a plot with a long subtitle that spans multiple lines:
+
+```{r}
+library(ggplot2)
+
+example <- ggplot(economics, aes(x = pop, y = unemploy)) +
+  geom_point() +
+  labs(
+    title = "Title",
+    subtitle = paste0(
+      "This is a long subtitle that spans multiple lines and serves as a nice demonstratation for this",
+      "\n",
+      "example about inspecting ggplot objects"
+    )
+  )
+
+example
+```
+
+Now, we want to write a wrapper function to `ggsave()` that changes the `height`
+parameter of the output plot, depending on whether a multiline subtitle has been
+detected.
+
+## What is a solution?
+Internally, a ggplot object is just stored as a list, and can be inspected with
+`str()` like most objects:
+```{r}
+typeof(example)
+str(example)
+```
+
+Here, we can see and access all the elements that make up the plot (e.g.,
+scales, data, etc.). The subtitle can be accessed like so:
+
+```{r}
+subtitle <- example$labels$subtitle
+```
+
+We could then write a wrapper function to detect whether our subtitle is
+multiline and change the `height` of `ggsave()` accordingly:
+
+```{r}
+ggsave_multline <- function(...) {
+  height <- ifelse(grepl("\\n", subtitle), 11, 10)
+  ggsave(height = height, ...)
+}
+```
+
+## What other solutions exist?
+ggplot2 provides a set of [functions](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+to render plot objects, which can also be used to inspect the underlying data
+and panel object. These functions [do not appear](https://github.com/tidyverse/ggplot2/blob/HEAD/R/plot-build.R#L21)
+in the documentation index however, and so are not easily discoverable. For a
+deeper diver on these functions and the internals of ggplot objects, see
+[this chapter](https://ggplot2-book.org/internals) in the book "ggplot2: Elegant
+Graphics for Data Analysis (3e)".

@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Mike Page">
-<meta name="dcterms.date" content="2025-10-01">
 
-<title>Wild recipes</title>
+<title>Wild recipes - 3&nbsp; Inspecting ggplot2 objects</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -32,7 +64,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./structure.html" rel="next">
+<link href="./references.html" rel="next">
+<link href="./ggplot2-annotations-positions.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -82,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ggplot2-annotations-sizes.html">ggplot2</a></li><li class="breadcrumb-item"><a href="./ggplot2-objects.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inspecting ggplot2 objects</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -109,7 +142,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Welcome</span></a>
   </div>
 </li>
@@ -136,8 +169,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./gglot2-annotations-positions.html" class="sidebar-item-text sidebar-link">
+  <a href="./ggplot2-annotations-positions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Annotations: infinite positions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ggplot2-objects.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inspecting ggplot2 objects</span></span></a>
   </div>
 </li>
       </ul>
@@ -158,35 +197,26 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
+  <li><a href="#what-is-the-problem" id="toc-what-is-the-problem" class="nav-link active" data-scroll-target="#what-is-the-problem"><span class="header-section-number">3.1</span> What is the problem?</a></li>
+  <li><a href="#what-is-an-example" id="toc-what-is-an-example" class="nav-link" data-scroll-target="#what-is-an-example"><span class="header-section-number">3.2</span> What is an example?</a></li>
+  <li><a href="#what-is-a-solution" id="toc-what-is-a-solution" class="nav-link" data-scroll-target="#what-is-a-solution"><span class="header-section-number">3.3</span> What is a solution?</a></li>
+  <li><a href="#what-other-solutions-exist" id="toc-what-other-solutions-exist" class="nav-link" data-scroll-target="#what-other-solutions-exist"><span class="header-section-number">3.4</span> What other solutions exist?</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ggplot2-annotations-sizes.html">ggplot2</a></li><li class="breadcrumb-item"><a href="./ggplot2-objects.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inspecting ggplot2 objects</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Wild recipes</h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Inspecting ggplot2 objects</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Mike Page </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 1, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -196,12 +226,206 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-
-<section id="welcome" class="level1 unnumbered">
-<h1 class="unnumbered">Welcome</h1><p><img src="cover.png" title="Wild recipes" class="quarto-cover-image img-fluid"></p>
-<p>The title for this book is inspired by Russ Roberts book, Wild Problems. In this books he describes a class of problem he calls ‘wild problems’. These are big life decisions (e.g., should I move country) where an algorithmic approach to solving them, such as using a cost-benefit analysis, often fails. Instead he proposes a new framework to tackle these problems. (I will leave the curious reader to discover more on their own)</p>
-<p>Much like the ‘wild problems’ discussed in Roberts’ book, the R programmer also faces a class of coding problem which could be described as wild. That is, a set of problems found outside of a controlled environment such as a classroom or textbook and instead found in an environment which is uncontrolled and wild. Here, the examples found elsewhere often fail, or require a more complex workaround. This could be due to underlying bugs in R or its libraries, poor documentation, or quite simply and most often the case, the complexity of the problem space you are working in doesn’t map easily to materials found elsewhere.</p>
-<p>This book is a collection of recipes to some of these wild coding problems I’ve experienced in my work as an R programmer. It is by no means exhausative. Nor is it entriely unique. Indeed, a plethora of resources already exist in this area and this book even rehashes some of these (e.g., Stack Overflow, Posit Community, etc.). This book has primarily been created as a means for myself to document problems I’ve faced and the wild recipes I’ve implemented along the way. My hope is these recipes might also help you too.</p>
+<section id="what-is-the-problem" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="what-is-the-problem"><span class="header-section-number">3.1</span> What is the problem?</h2>
+<p>After creating a ggplot2 object, it can be useful to inspect the object created, for example, to change the behaviour of functions using that object, or for writing unit tests. Searching through the <a href="https://ggplot2.tidyverse.org/reference/index.html">documentation index</a> reveals no help, and printing the name of the plot to the console just calls the default print method, re-printing the plot.</p>
+</section>
+<section id="what-is-an-example" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="what-is-an-example"><span class="header-section-number">3.2</span> What is an example?</h2>
+<p>Let’s create and print a plot with a long subtitle that spans multiple lines:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>example <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(economics, <span class="fu">aes</span>(<span class="at">x =</span> pop, <span class="at">y =</span> unemploy)) <span class="sc">+</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Title"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"This is a long subtitle that spans multiple lines and serves as a nice demonstratation for this"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"example about inspecting ggplot objects"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ggplot2-objects_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, we want to write a wrapper function to <code>ggsave()</code> that changes the <code>height</code> parameter of the output plot, depending on whether a multiline subtitle has been detected.</p>
+</section>
+<section id="what-is-a-solution" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="what-is-a-solution"><span class="header-section-number">3.3</span> What is a solution?</h2>
+<p>Internally, a ggplot object is just stored as a list, and can be inspected with <code>str()</code> like most objects:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(example)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "list"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(example)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 9
+ $ data       : spc_tbl_ [574 × 6] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+  ..$ date    : Date[1:574], format: "1967-07-01" "1967-08-01" ...
+  ..$ pce     : num [1:574] 507 510 516 512 517 ...
+  ..$ pop     : num [1:574] 198712 198911 199113 199311 199498 ...
+  ..$ psavert : num [1:574] 12.6 12.6 11.9 12.9 12.8 11.8 11.7 12.3 11.7 12.3 ...
+  ..$ uempmed : num [1:574] 4.5 4.7 4.6 4.9 4.7 4.8 5.1 4.5 4.1 4.6 ...
+  ..$ unemploy: num [1:574] 2944 2945 2958 3143 3066 ...
+ $ layers     :List of 1
+  ..$ :Classes 'LayerInstance', 'Layer', 'ggproto', 'gg' &lt;ggproto object: Class LayerInstance, Layer, gg&gt;
+    aes_params: list
+    compute_aesthetics: function
+    compute_geom_1: function
+    compute_geom_2: function
+    compute_position: function
+    compute_statistic: function
+    computed_geom_params: list
+    computed_mapping: uneval
+    computed_stat_params: list
+    constructor: call
+    data: waiver
+    draw_geom: function
+    finish_statistics: function
+    geom: &lt;ggproto object: Class GeomPoint, Geom, gg&gt;
+        aesthetics: function
+        default_aes: uneval
+        draw_group: function
+        draw_key: function
+        draw_layer: function
+        draw_panel: function
+        extra_params: na.rm
+        handle_na: function
+        non_missing_aes: size shape colour
+        optional_aes: 
+        parameters: function
+        rename_size: FALSE
+        required_aes: x y
+        setup_data: function
+        setup_params: function
+        use_defaults: function
+        super:  &lt;ggproto object: Class Geom, gg&gt;
+    geom_params: list
+    inherit.aes: TRUE
+    layer_data: function
+    map_statistic: function
+    mapping: NULL
+    position: &lt;ggproto object: Class PositionIdentity, Position, gg&gt;
+        compute_layer: function
+        compute_panel: function
+        required_aes: 
+        setup_data: function
+        setup_params: function
+        super:  &lt;ggproto object: Class Position, gg&gt;
+    print: function
+    setup_layer: function
+    show.legend: NA
+    stat: &lt;ggproto object: Class StatIdentity, Stat, gg&gt;
+        aesthetics: function
+        compute_group: function
+        compute_layer: function
+        compute_panel: function
+        default_aes: uneval
+        dropped_aes: 
+        extra_params: na.rm
+        finish_layer: function
+        non_missing_aes: 
+        optional_aes: 
+        parameters: function
+        required_aes: 
+        retransform: TRUE
+        setup_data: function
+        setup_params: function
+        super:  &lt;ggproto object: Class Stat, gg&gt;
+    stat_params: list
+    super:  &lt;ggproto object: Class Layer, gg&gt; 
+ $ scales     :Classes 'ScalesList', 'ggproto', 'gg' &lt;ggproto object: Class ScalesList, gg&gt;
+    add: function
+    clone: function
+    find: function
+    get_scales: function
+    has_scale: function
+    input: function
+    n: function
+    non_position_scales: function
+    scales: list
+    super:  &lt;ggproto object: Class ScalesList, gg&gt; 
+ $ mapping    :List of 2
+  ..$ x: language ~pop
+  .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+  ..$ y: language ~unemploy
+  .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+  ..- attr(*, "class")= chr "uneval"
+ $ theme      : list()
+ $ coordinates:Classes 'CoordCartesian', 'Coord', 'ggproto', 'gg' &lt;ggproto object: Class CoordCartesian, Coord, gg&gt;
+    aspect: function
+    backtransform_range: function
+    clip: on
+    default: TRUE
+    distance: function
+    expand: TRUE
+    is_free: function
+    is_linear: function
+    labels: function
+    limits: list
+    modify_scales: function
+    range: function
+    render_axis_h: function
+    render_axis_v: function
+    render_bg: function
+    render_fg: function
+    setup_data: function
+    setup_layout: function
+    setup_panel_guides: function
+    setup_panel_params: function
+    setup_params: function
+    train_panel_guides: function
+    transform: function
+    super:  &lt;ggproto object: Class CoordCartesian, Coord, gg&gt; 
+ $ facet      :Classes 'FacetNull', 'Facet', 'ggproto', 'gg' &lt;ggproto object: Class FacetNull, Facet, gg&gt;
+    compute_layout: function
+    draw_back: function
+    draw_front: function
+    draw_labels: function
+    draw_panels: function
+    finish_data: function
+    init_scales: function
+    map_data: function
+    params: list
+    setup_data: function
+    setup_params: function
+    shrink: TRUE
+    train_scales: function
+    vars: function
+    super:  &lt;ggproto object: Class FacetNull, Facet, gg&gt; 
+ $ plot_env   :&lt;environment: R_GlobalEnv&gt; 
+ $ labels     :List of 4
+  ..$ title   : chr "Title"
+  ..$ subtitle: chr "This is a long subtitle that spans multiple lines and serves as a nice demonstratation for this\nexample about "| __truncated__
+  ..$ x       : chr "pop"
+  ..$ y       : chr "unemploy"
+ - attr(*, "class")= chr [1:2] "gg" "ggplot"</code></pre>
+</div>
+</div>
+<p>Here, we can see and access all the elements that make up the plot (e.g., scales, data, etc.). The subtitle can be accessed like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>subtitle <span class="ot">&lt;-</span> example<span class="sc">$</span>labels<span class="sc">$</span>subtitle</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We could then write a wrapper function to detect whether our subtitle is multiline and change the <code>height</code> of <code>ggsave()</code> accordingly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ggsave_multline <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  height <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">n"</span>, subtitle), <span class="dv">11</span>, <span class="dv">10</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(<span class="at">height =</span> height, ...)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-other-solutions-exist" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="what-other-solutions-exist"><span class="header-section-number">3.4</span> What other solutions exist?</h2>
+<p>ggplot2 provides a set of <a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html">functions</a> to render plot objects, which can also be used to inspect the underlying data and panel object. These functions <a href="https://github.com/tidyverse/ggplot2/blob/HEAD/R/plot-build.R#L21">do not appear</a> in the documentation index however, and so are not easily discoverable. For a deeper diver on these functions and the internals of ggplot objects, see <a href="https://ggplot2-book.org/internals">this chapter</a> in the book “ggplot2: Elegant Graphics for Data Analysis (3e)”.</p>
 
 
 </section>
@@ -596,10 +820,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./ggplot2-annotations-positions.html" class="pagination-link  aria-label=" &lt;span="" infinite="" positions&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Annotations: infinite positions</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./structure.html" class="pagination-link" aria-label="Book structure">
-        <span class="nav-page-text">Book structure</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
