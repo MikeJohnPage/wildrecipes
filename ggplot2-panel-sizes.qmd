@@ -1,0 +1,38 @@
+# Panel sizes
+
+## What is the problem?
+There is no default method to set the panel size of a plot in ggplot2, only a
+method to set the plot size using the `width` and `height` paramaeters of
+`ggplot2::ggsave()`. The panel refers to the inner plotting window that contains
+the data, and the plot refers to the whole plotting window that contains both
+the panel and all other elements (e.g., legeneds, labels, etc.):
+
+```{r}
+#| echo: false
+library(ggplot2)
+
+ggplot() +
+  ggtitle("Plot") +
+  theme(plot.title = element_text(size = unit(14, "pt"), hjust = 0.5)) +
+  annotate(
+    "text",
+    label = "Panel",
+    x = 0, y = 0,
+    size = unit(14, "pt") / .pt
+  )
+```
+
+## What is a solution?
+The [`ggh4x::force_panelsizes()`](https://teunbrand.github.io/ggh4x/reference/force_panelsizes.html)
+function can be used to coerce a single panel to a set size:
+
+```{r}
+library(ggplot2)
+
+ggplot(economics, aes(x = pop, y = unemploy)) +
+  geom_point() +
+  ggh4x::force_panelsizes(
+    rows = unit(8, "cm"),
+    cols = unit(12, "cm")
+  )
+```

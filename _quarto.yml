@@ -15,6 +15,7 @@ book:
       - ggplot2-annotations-sizes.qmd
       - ggplot2-annotations-positions.qmd
       - ggplot2-objects.qmd
+      - ggplot2-panel-sizes.qmd
       # wrapping annotations in a list
       
     - references.qmd
