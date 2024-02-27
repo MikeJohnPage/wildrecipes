@@ -1,0 +1,81 @@
+# Consecutive true values
+
+## What is the problem?
+For a column of logical values in a data frame, count of the  number of
+consecutive `TRUE` values at the given point in the column. `NA` values should
+return `NA` and reset the count.
+
+## What is an example?
+For the data frame:
+
+```{r}
+df <- tibble::tibble(x = c(TRUE, TRUE, NA, TRUE, FALSE, TRUE, TRUE, TRUE))
+```
+
+The following data frame should be returned:
+
+```{r}
+#| echo: false
+tibble::tibble(
+  x = c(TRUE, TRUE, NA, TRUE, FALSE, TRUE, TRUE, TRUE),
+  consecutive_trues = c(2, 1, NA, 1, 0, 3, 2, 1)
+)
+```
+
+## What is a solution?
+We can leverage the `dplyr::consecutive_id()` function to create unique group
+id's, and then create sequences along these id's:
+
+```{r}
+#| warning: false
+library(tibble)
+library(dplyr)
+
+df |>
+  mutate(id = consecutive_id(x)) |>
+  add_count(id) |>
+  mutate(consecutive_trues = seq(n(), 1), .by = id) |>
+  mutate(
+    consecutive_trues = case_when(
+      is.na(x) ~ NA_integer_,
+      x ~ consecutive_trues,
+      .default = 0
+    )
+  ) |>
+  select(-id, -n)
+```
+
+To reverse the order of the count of `TRUE` values, that is, to count the
+number of trailing `TRUE` values, the order of the sequence can simply be
+switched.
+
+## What are alternate solutions?
+For a generalised solution that works with any vector, outside the context of
+a data frame:
+
+```{r}
+consecutive_trues <- function(x) {
+  result <- integer(length(x))
+  current_total <- 0
+
+  for (i in seq_along(x)) {
+    if (is.na(x[i])) {
+      result[i] <- NA_integer_
+      current_total <- 0
+    } else if (x[i]) {
+      j <- i
+      while (isTRUE(x[j])) {
+        current_total <- current_total + 1
+        j <- j + 1
+      }
+      result[i] <- current_total
+      current_total <- 0
+    } else {
+      current_total <- 0
+      result[i] <- current_total
+    }
+  }
+
+  return(result)
+}
+```

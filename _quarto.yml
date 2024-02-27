@@ -18,6 +18,10 @@ book:
       - ggplot2-objects.qmd
       - ggplot2-panel-sizes.qmd
       # wrapping annotations in a list
+    
+    - part: Utilities
+      chapters:
+      - utilities-consecutive-trues.qmd
       
     - references.qmd
 
