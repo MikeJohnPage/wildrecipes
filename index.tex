@@ -117,33 +117,41 @@
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
   \fi
   % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \KOMAoption{captions}{tableheading}
-\makeatletter
-\makeatother
 \makeatletter
 \@ifpackageloaded{bookmark}{}{\usepackage{bookmark}}
 \makeatother
@@ -183,23 +191,16 @@
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \makeatother
 \makeatletter
+\makeatother
+\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
-\makeatother
-\makeatletter
-\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
-\makeatother
-\makeatletter
-\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
-\makeatother
-\makeatletter
-\makeatother
-\makeatletter
 \makeatother
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
@@ -218,7 +219,6 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, enhanced, borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt, breakable, sharp corners, frame hidden]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -228,8 +228,7 @@
 }
 \bookmarksetup{startatroot}
 
-\hypertarget{welcome}{%
-\chapter*{Welcome}\label{welcome}}
+\chapter*{Welcome}\label{welcome}
 \addcontentsline{toc}{chapter}{Welcome}
 
 \markboth{Welcome}{Welcome}
@@ -264,8 +263,7 @@ these recipes might also help you too.
 
 \bookmarksetup{startatroot}
 
-\hypertarget{book-structure}{%
-\chapter*{Book structure}\label{book-structure}}
+\chapter*{Book structure}\label{book-structure}
 \addcontentsline{toc}{chapter}{Book structure}
 
 \markboth{Book structure}{Book structure}
@@ -294,19 +292,16 @@ Occasionally, recipes will also cover:
 
 \part{ggplot2}
 
-\hypertarget{annotations-text-size}{%
-\chapter{Annotations: text size}\label{annotations-text-size}}
+\chapter{Annotations: text size}\label{annotations-text-size}
 
-\hypertarget{what-is-the-problem}{%
-\section{What is the problem?}\label{what-is-the-problem}}
+\section{What is the problem?}\label{what-is-the-problem}
 
 When adding a text annotation to a plot with
 \texttt{ggplot2::annotate()}, the size of the text in the annotation
 does not match other elements on the plot despite setting the
 \texttt{size} argument to equal values.
 
-\hypertarget{what-is-an-example}{%
-\section{What is an example?}\label{what-is-an-example}}
+\section{What is an example?}\label{what-is-an-example}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -324,16 +319,9 @@ does not match other elements on the plot despite setting the
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
+\includegraphics{ggplot2-annotations-sizes_files/figure-pdf/unnamed-chunk-1-1.pdf}
 
-{\centering \includegraphics{ggplot2-annotations-sizes_files/figure-pdf/unnamed-chunk-1-1.pdf}
-
-}
-
-\end{figure}
-
-\hypertarget{what-is-a-solution}{%
-\section{What is a solution?}\label{what-is-a-solution}}
+\section{What is a solution?}\label{what-is-a-solution}
 
 To align the sizes of annotations and other elements on the plot,
 annotation sizes must be divided by \texttt{.pt}:
@@ -352,13 +340,7 @@ annotation sizes must be divided by \texttt{.pt}:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
-
-{\centering \includegraphics{ggplot2-annotations-sizes_files/figure-pdf/unnamed-chunk-2-1.pdf}
-
-}
-
-\end{figure}
+\includegraphics{ggplot2-annotations-sizes_files/figure-pdf/unnamed-chunk-2-1.pdf}
 
 This works because \texttt{annotate()} calculates font size by
 multiplying the specified size by the global variable \texttt{.pt}
@@ -366,20 +348,17 @@ multiplying the specified size by the global variable \texttt{.pt}
 \href{https://stackoverflow.com/questions/65076492/ggplot-size-of-annotate-vs-size-of-element-text}{this}
 Stack Overflow post for more information.
 
-\hypertarget{annotations-infinite-positions}{%
 \chapter{Annotations: infinite
-positions}\label{annotations-infinite-positions}}
+positions}\label{annotations-infinite-positions}
 
-\hypertarget{what-is-the-problem-1}{%
-\section{What is the problem?}\label{what-is-the-problem-1}}
+\section{What is the problem?}\label{what-is-the-problem-1}
 
 To position annotations at the edge of a plot, the values \texttt{Inf}
 and \texttt{-Inf} can be passed to the positioning aesthetics (e.g.,
 \texttt{x}) of \texttt{ggplot2::annotation()}. This technique fails for
 scales that are of class \texttt{Date}.
 
-\hypertarget{what-is-an-example-1}{%
-\section{What is an example?}\label{what-is-an-example-1}}
+\section{What is an example?}\label{what-is-an-example-1}
 
 It is useful to first see how we can position annotations on scales
 which aren't dates. For example, using the built-in economics dataset of
@@ -401,13 +380,7 @@ plot like so:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
-
-{\centering \includegraphics{ggplot2-annotations-positions_files/figure-pdf/unnamed-chunk-1-1.pdf}
-
-}
-
-\end{figure}
+\includegraphics{ggplot2-annotations-positions_files/figure-pdf/unnamed-chunk-1-1.pdf}
 
 When we try the same approach to a scale that uses dates, we get an
 error:
@@ -426,11 +399,11 @@ error:
 \end{Shaded}
 
 \begin{verbatim}
-Error: Invalid input: date_trans works with objects of class Date only
+Error in `self$trans$transform()`:
+! `transform_date()` works with objects of class <Date> only
 \end{verbatim}
 
-\hypertarget{what-is-a-soltuion}{%
-\section{What is a soltuion?}\label{what-is-a-soltuion}}
+\section{What is a soltuion?}\label{what-is-a-soltuion}
 
 To plot an annotation at the edge of a scale of class \texttt{Date}, you
 should change the class of \texttt{Inf} to a \texttt{Date} class:
@@ -448,22 +421,14 @@ should change the class of \texttt{Inf} to a \texttt{Date} class:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
-
-{\centering \includegraphics{ggplot2-annotations-positions_files/figure-pdf/unnamed-chunk-3-1.pdf}
-
-}
-
-\end{figure}
+\includegraphics{ggplot2-annotations-positions_files/figure-pdf/unnamed-chunk-3-1.pdf}
 
 See \href{https://github.com/tidyverse/ggplot2/issues/4308}{this} GitHub
 issue for more information.
 
-\hypertarget{inspecting-ggplot2-objects}{%
-\chapter{Inspecting ggplot2 objects}\label{inspecting-ggplot2-objects}}
+\chapter{Inspecting ggplot2 objects}\label{inspecting-ggplot2-objects}
 
-\hypertarget{what-is-the-problem-2}{%
-\section{What is the problem?}\label{what-is-the-problem-2}}
+\section{What is the problem?}\label{what-is-the-problem-2}
 
 After creating a ggplot2 object, it can be useful to inspect the object
 created, for example, to change the behaviour of functions using that
@@ -472,8 +437,7 @@ object, or for writing unit tests. Searching through the
 index} reveals no help, and printing the name of the plot to the console
 just calls the default print method, re-printing the plot.
 
-\hypertarget{what-is-an-example-2}{%
-\section{What is an example?}\label{what-is-an-example-2}}
+\section{What is an example?}\label{what-is-an-example-2}
 
 Let's create and print a plot with a long subtitle that spans multiple
 lines:
@@ -497,20 +461,13 @@ lines:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
-
-{\centering \includegraphics{ggplot2-objects_files/figure-pdf/unnamed-chunk-1-1.pdf}
-
-}
-
-\end{figure}
+\includegraphics{ggplot2-objects_files/figure-pdf/unnamed-chunk-1-1.pdf}
 
 Now, we want to write a wrapper function to \texttt{ggsave()} that
 changes the \texttt{height} parameter of the output plot, depending on
 whether a multiline subtitle has been detected.
 
-\hypertarget{what-is-a-solution-1}{%
-\section{What is a solution?}\label{what-is-a-solution-1}}
+\section{What is a solution?}\label{what-is-a-solution-1}
 
 Internally, a ggplot object is just stored as a list, and can be
 inspected with \texttt{str()} like most objects:
@@ -697,8 +654,7 @@ accordingly:
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{what-other-solutions-exist}{%
-\section{What other solutions exist?}\label{what-other-solutions-exist}}
+\section{What other solutions exist?}\label{what-other-solutions-exist}
 
 ggplot2 provides a set of
 \href{https://ggplot2.tidyverse.org/reference/ggplot_build.html}{functions}
@@ -711,11 +667,9 @@ ggplot objects, see \href{https://ggplot2-book.org/internals}{this
 chapter} in the book ``ggplot2: Elegant Graphics for Data Analysis
 (3e)''.
 
-\hypertarget{panel-sizes}{%
-\chapter{Panel sizes}\label{panel-sizes}}
+\chapter{Panel sizes}\label{panel-sizes}
 
-\hypertarget{what-is-the-problem-3}{%
-\section{What is the problem?}\label{what-is-the-problem-3}}
+\section{What is the problem?}\label{what-is-the-problem-3}
 
 There is no default method to set the panel size of a plot in ggplot2,
 only a method to set the plot size using the \texttt{width} and
@@ -726,8 +680,7 @@ other elements (e.g., legeneds, labels, etc.):
 
 \includegraphics{ggplot2-panel-sizes_files/figure-pdf/unnamed-chunk-1-1.pdf}
 
-\hypertarget{what-is-a-solution-2}{%
-\section{What is a solution?}\label{what-is-a-solution-2}}
+\section{What is a solution?}\label{what-is-a-solution-2}
 
 The
 \href{https://teunbrand.github.io/ggh4x/reference/force_panelsizes.html}{\texttt{ggh4x::force\_panelsizes()}}
@@ -746,24 +699,131 @@ function can be used to coerce a single panel to a set size:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
+\includegraphics{ggplot2-panel-sizes_files/figure-pdf/unnamed-chunk-2-1.pdf}
 
-{\centering \includegraphics{ggplot2-panel-sizes_files/figure-pdf/unnamed-chunk-2-1.pdf}
+\part{Utilities}
 
-}
+\chapter{Consecutive true values}\label{consecutive-true-values}
 
-\end{figure}
+\section{What is the problem?}\label{what-is-the-problem-4}
+
+For a column of logical values in a data frame, count of the number of
+consecutive \texttt{TRUE} values at the given point in the column.
+\texttt{NA} values should return \texttt{NA} and reset the count.
+
+\section{What is an example?}\label{what-is-an-example-3}
+
+For the data frame:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\OtherTok{\textless{}{-}}\NormalTok{ tibble}\SpecialCharTok{::}\FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{c}\NormalTok{(}\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{FALSE}\NormalTok{, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{TRUE}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+The following data frame should be returned:
+
+\begin{verbatim}
+# A tibble: 8 x 2
+  x     consecutive_trues
+  <lgl>             <dbl>
+1 TRUE                  2
+2 TRUE                  1
+3 NA                   NA
+4 TRUE                  1
+5 FALSE                 0
+6 TRUE                  3
+7 TRUE                  2
+8 TRUE                  1
+\end{verbatim}
+
+\section{What is a solution?}\label{what-is-a-solution-3}
+
+We can leverage the \texttt{dplyr::consecutive\_id()} function to create
+unique group id's, and then create sequences along these id's:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tibble)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+
+\NormalTok{df }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{id =} \FunctionTok{consecutive\_id}\NormalTok{(x)) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{add\_count}\NormalTok{(id) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{consecutive\_trues =} \FunctionTok{seq}\NormalTok{(}\FunctionTok{n}\NormalTok{(), }\DecValTok{1}\NormalTok{), }\AttributeTok{.by =}\NormalTok{ id) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{consecutive\_trues =} \FunctionTok{case\_when}\NormalTok{(}
+      \FunctionTok{is.na}\NormalTok{(x) }\SpecialCharTok{\textasciitilde{}} \ConstantTok{NA\_integer\_}\NormalTok{,}
+\NormalTok{      x }\SpecialCharTok{\textasciitilde{}}\NormalTok{ consecutive\_trues,}
+      \AttributeTok{.default =} \DecValTok{0}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{id, }\SpecialCharTok{{-}}\NormalTok{n)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 8 x 2
+  x     consecutive_trues
+  <lgl>             <dbl>
+1 TRUE                  2
+2 TRUE                  1
+3 NA                   NA
+4 TRUE                  1
+5 FALSE                 0
+6 TRUE                  3
+7 TRUE                  2
+8 TRUE                  1
+\end{verbatim}
+
+To reverse the order of the count of \texttt{TRUE} values, that is, to
+count the number of trailing \texttt{TRUE} values, the order of the
+sequence can simply be switched.
+
+\section{What are alternate
+solutions?}\label{what-are-alternate-solutions}
+
+For a generalised solution that works with any vector, outside the
+context of a data frame:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{consecutive\_trues }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{  result }\OtherTok{\textless{}{-}} \FunctionTok{integer}\NormalTok{(}\FunctionTok{length}\NormalTok{(x))}
+\NormalTok{  current\_total }\OtherTok{\textless{}{-}} \DecValTok{0}
+
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(x)) \{}
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.na}\NormalTok{(x[i])) \{}
+\NormalTok{      result[i] }\OtherTok{\textless{}{-}} \ConstantTok{NA\_integer\_}
+\NormalTok{      current\_total }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (x[i]) \{}
+\NormalTok{      j }\OtherTok{\textless{}{-}}\NormalTok{ i}
+      \ControlFlowTok{while}\NormalTok{ (}\FunctionTok{isTRUE}\NormalTok{(x[j])) \{}
+\NormalTok{        current\_total }\OtherTok{\textless{}{-}}\NormalTok{ current\_total }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{        j }\OtherTok{\textless{}{-}}\NormalTok{ j }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{      \}}
+\NormalTok{      result[i] }\OtherTok{\textless{}{-}}\NormalTok{ current\_total}
+\NormalTok{      current\_total }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      current\_total }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{      result[i] }\OtherTok{\textless{}{-}}\NormalTok{ current\_total}
+\NormalTok{    \}}
+\NormalTok{  \}}
+
+  \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
 
 \bookmarksetup{startatroot}
 
-\hypertarget{references}{%
-\chapter*{References}\label{references}}
+\chapter*{References}\label{references}
 \addcontentsline{toc}{chapter}{References}
 
 \markboth{References}{References}
 
-\hypertarget{refs}{}
-\begin{CSLReferences}{0}{0}
+\phantomsection\label{refs}
+\begin{CSLReferences}{0}{1}
 \end{CSLReferences}
 
 

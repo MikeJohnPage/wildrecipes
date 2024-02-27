@@ -1,5 +1,157 @@
 [
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Wild recipes",
+    "section": "",
+    "text": "Welcome\nThe title for this book is inspired by Russ Roberts book, Wild Problems. In this books he describes a class of problem he calls ‘wild problems’. These are big life decisions (e.g., should I move country) where an algorithmic approach to solving them, such as using a cost-benefit analysis, often fails. Instead he proposes a new framework to tackle these problems. (I will leave the curious reader to discover more on their own)\nMuch like the ‘wild problems’ discussed in Roberts’ book, the R programmer also faces a class of coding problem which could be described as wild. That is, a set of problems found outside of a controlled environment such as a classroom or textbook and instead found in an environment which is uncontrolled and wild. Here, the examples found elsewhere often fail, or require a more complex workaround. This could be due to underlying bugs in R or its libraries, poor documentation, or quite simply and most often the case, the complexity of the problem space you are working in doesn’t map easily to materials found elsewhere.\nThis book is a collection of recipes to some of these wild coding problems I’ve experienced in my work as an R programmer. It is by no means exhausative. Nor is it entriely unique. Indeed, a plethora of resources already exist in this area and this book even rehashes some of these (e.g., Stack Overflow, Posit Community, etc.). This book has primarily been created as a means for myself to document problems I’ve faced and the wild recipes I’ve implemented along the way. My hope is these recipes might also help you too.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "structure.html",
+    "href": "structure.html",
+    "title": "Book structure",
+    "section": "",
+    "text": "This book is not designed to be read from cover to cover. Instead it is written as a collection of individual recipes. Inspired by Tidy design principles, each recipe can be read in isolation and will cover:\n\nWhat is the problem?\nWhat is an example?\nWhat is a solution?\n\nOccasionally, recipes will also cover:\n\nWhat other solutions exist?",
+    "crumbs": [
+      "Book structure"
+    ]
+  },
+  {
+    "objectID": "ggplot2-annotations-sizes.html",
+    "href": "ggplot2-annotations-sizes.html",
+    "title": "1  Annotations: text size",
+    "section": "",
+    "text": "1.1 What is the problem?\nWhen adding a text annotation to a plot with ggplot2::annotate(), the size of the text in the annotation does not match other elements on the plot despite setting the size argument to equal values.",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Annotations: text size</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-annotations-sizes.html#what-is-an-example",
+    "href": "ggplot2-annotations-sizes.html#what-is-an-example",
+    "title": "1  Annotations: text size",
+    "section": "1.2 What is an example?",
+    "text": "1.2 What is an example?\n\nlibrary(ggplot2)\n\nggplot() +\n  ggtitle(\"This title is size 14\") +\n  theme(plot.title = element_text(size = unit(14, \"pt\"))) +\n  annotate(\n    \"text\",\n    label = \"This annotation is size 14\",\n    x = 0, y = 0,\n    size = unit(14, \"pt\")\n  )",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Annotations: text size</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-annotations-sizes.html#what-is-a-solution",
+    "href": "ggplot2-annotations-sizes.html#what-is-a-solution",
+    "title": "1  Annotations: text size",
+    "section": "1.3 What is a solution?",
+    "text": "1.3 What is a solution?\nTo align the sizes of annotations and other elements on the plot, annotation sizes must be divided by .pt:\n\nggplot() +\n  ggtitle(\"This title is size 14\") +\n  theme(plot.title = element_text(size = unit(14, \"pt\"))) +\n  annotate(\n    \"text\",\n    label = \"This annotation is size 14\",\n    x = 0, y = 0,\n    size = unit(14, \"pt\") / .pt # divide by .pt\n  )\n\n\n\n\n\n\n\n\nThis works because annotate() calculates font size by multiplying the specified size by the global variable .pt (equal to 2.845276). See this Stack Overflow post for more information.",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Annotations: text size</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-annotations-positions.html",
+    "href": "ggplot2-annotations-positions.html",
+    "title": "2  Annotations: infinite positions",
+    "section": "",
+    "text": "2.1 What is the problem?\nTo position annotations at the edge of a plot, the values Inf and -Inf can be passed to the positioning aesthetics (e.g., x) of ggplot2::annotation(). This technique fails for scales that are of class Date.",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Annotations: infinite positions</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-annotations-positions.html#what-is-an-example",
+    "href": "ggplot2-annotations-positions.html#what-is-an-example",
+    "title": "2  Annotations: infinite positions",
+    "section": "2.2 What is an example?",
+    "text": "2.2 What is an example?\nIt is useful to first see how we can position annotations on scales which aren’t dates. For example, using the built-in economics dataset of ggplot2, we can postion an annotation in the top-right corner of the plot like so:\n\nlibrary(ggplot2)\n\nggplot(economics, aes(x = pop, y = unemploy)) +\n  geom_point() +\n  annotate(\n    \"text\",\n    label = \"Top-right\",\n    vjust = 1, hjust = 1, # Prevent text being chopped\n    x = Inf, y = Inf\n  )\n\n\n\n\n\n\n\n\nWhen we try the same approach to a scale that uses dates, we get an error:\n\nggplot(economics, aes(x = date, y = unemploy)) +\n  geom_point() +\n  annotate(\n    \"text\",\n    label = \"Top-right\",\n    vjust = 1, hjust = 1, # Prevent text being chopped\n    x = Inf, y = Inf\n  )\n\nError in `self$trans$transform()`:\n! `transform_date()` works with objects of class &lt;Date&gt; only",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Annotations: infinite positions</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-annotations-positions.html#what-is-a-soltuion",
+    "href": "ggplot2-annotations-positions.html#what-is-a-soltuion",
+    "title": "2  Annotations: infinite positions",
+    "section": "2.3 What is a soltuion?",
+    "text": "2.3 What is a soltuion?\nTo plot an annotation at the edge of a scale of class Date, you should change the class of Inf to a Date class:\n\nggplot(economics, aes(x = date, y = unemploy)) +\n  geom_point() +\n  annotate(\n    \"text\",\n    label = \"Top-right\",\n    vjust = 1, hjust = 1, # Prevent text being chopped\n    x = structure(Inf, class = \"Date\"), y = Inf\n  )\n\n\n\n\n\n\n\n\nSee this GitHub issue for more information.",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Annotations: infinite positions</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-objects.html",
+    "href": "ggplot2-objects.html",
+    "title": "3  Inspecting ggplot2 objects",
+    "section": "",
+    "text": "3.1 What is the problem?\nAfter creating a ggplot2 object, it can be useful to inspect the object created, for example, to change the behaviour of functions using that object, or for writing unit tests. Searching through the documentation index reveals no help, and printing the name of the plot to the console just calls the default print method, re-printing the plot.",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Inspecting ggplot2 objects</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-objects.html#what-is-an-example",
+    "href": "ggplot2-objects.html#what-is-an-example",
+    "title": "3  Inspecting ggplot2 objects",
+    "section": "3.2 What is an example?",
+    "text": "3.2 What is an example?\nLet’s create and print a plot with a long subtitle that spans multiple lines:\n\nlibrary(ggplot2)\n\nexample &lt;- ggplot(economics, aes(x = pop, y = unemploy)) +\n  geom_point() +\n  labs(\n    title = \"Title\",\n    subtitle = paste0(\n      \"This is a long subtitle that spans multiple lines and serves as a nice demonstratation for this\",\n      \"\\n\",\n      \"example about inspecting ggplot objects\"\n    )\n  )\n\nexample\n\n\n\n\n\n\n\n\nNow, we want to write a wrapper function to ggsave() that changes the height parameter of the output plot, depending on whether a multiline subtitle has been detected.",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Inspecting ggplot2 objects</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-objects.html#what-is-a-solution",
+    "href": "ggplot2-objects.html#what-is-a-solution",
+    "title": "3  Inspecting ggplot2 objects",
+    "section": "3.3 What is a solution?",
+    "text": "3.3 What is a solution?\nInternally, a ggplot object is just stored as a list, and can be inspected with str() like most objects:\n\ntypeof(example)\n\n[1] \"list\"\n\nstr(example)\n\nList of 9\n $ data       : spc_tbl_ [574 × 6] (S3: spec_tbl_df/tbl_df/tbl/data.frame)\n  ..$ date    : Date[1:574], format: \"1967-07-01\" \"1967-08-01\" ...\n  ..$ pce     : num [1:574] 507 510 516 512 517 ...\n  ..$ pop     : num [1:574] 198712 198911 199113 199311 199498 ...\n  ..$ psavert : num [1:574] 12.6 12.6 11.9 12.9 12.8 11.8 11.7 12.3 11.7 12.3 ...\n  ..$ uempmed : num [1:574] 4.5 4.7 4.6 4.9 4.7 4.8 5.1 4.5 4.1 4.6 ...\n  ..$ unemploy: num [1:574] 2944 2945 2958 3143 3066 ...\n $ layers     :List of 1\n  ..$ :Classes 'LayerInstance', 'Layer', 'ggproto', 'gg' &lt;ggproto object: Class LayerInstance, Layer, gg&gt;\n    aes_params: list\n    compute_aesthetics: function\n    compute_geom_1: function\n    compute_geom_2: function\n    compute_position: function\n    compute_statistic: function\n    computed_geom_params: list\n    computed_mapping: uneval\n    computed_stat_params: list\n    constructor: call\n    data: waiver\n    draw_geom: function\n    finish_statistics: function\n    geom: &lt;ggproto object: Class GeomPoint, Geom, gg&gt;\n        aesthetics: function\n        default_aes: uneval\n        draw_group: function\n        draw_key: function\n        draw_layer: function\n        draw_panel: function\n        extra_params: na.rm\n        handle_na: function\n        non_missing_aes: size shape colour\n        optional_aes: \n        parameters: function\n        rename_size: FALSE\n        required_aes: x y\n        setup_data: function\n        setup_params: function\n        use_defaults: function\n        super:  &lt;ggproto object: Class Geom, gg&gt;\n    geom_params: list\n    inherit.aes: TRUE\n    layer_data: function\n    map_statistic: function\n    mapping: NULL\n    position: &lt;ggproto object: Class PositionIdentity, Position, gg&gt;\n        compute_layer: function\n        compute_panel: function\n        required_aes: \n        setup_data: function\n        setup_params: function\n        super:  &lt;ggproto object: Class Position, gg&gt;\n    print: function\n    setup_layer: function\n    show.legend: NA\n    stat: &lt;ggproto object: Class StatIdentity, Stat, gg&gt;\n        aesthetics: function\n        compute_group: function\n        compute_layer: function\n        compute_panel: function\n        default_aes: uneval\n        dropped_aes: \n        extra_params: na.rm\n        finish_layer: function\n        non_missing_aes: \n        optional_aes: \n        parameters: function\n        required_aes: \n        retransform: TRUE\n        setup_data: function\n        setup_params: function\n        super:  &lt;ggproto object: Class Stat, gg&gt;\n    stat_params: list\n    super:  &lt;ggproto object: Class Layer, gg&gt; \n $ scales     :Classes 'ScalesList', 'ggproto', 'gg' &lt;ggproto object: Class ScalesList, gg&gt;\n    add: function\n    clone: function\n    find: function\n    get_scales: function\n    has_scale: function\n    input: function\n    n: function\n    non_position_scales: function\n    scales: list\n    super:  &lt;ggproto object: Class ScalesList, gg&gt; \n $ mapping    :List of 2\n  ..$ x: language ~pop\n  .. ..- attr(*, \".Environment\")=&lt;environment: R_GlobalEnv&gt; \n  ..$ y: language ~unemploy\n  .. ..- attr(*, \".Environment\")=&lt;environment: R_GlobalEnv&gt; \n  ..- attr(*, \"class\")= chr \"uneval\"\n $ theme      : list()\n $ coordinates:Classes 'CoordCartesian', 'Coord', 'ggproto', 'gg' &lt;ggproto object: Class CoordCartesian, Coord, gg&gt;\n    aspect: function\n    backtransform_range: function\n    clip: on\n    default: TRUE\n    distance: function\n    expand: TRUE\n    is_free: function\n    is_linear: function\n    labels: function\n    limits: list\n    modify_scales: function\n    range: function\n    render_axis_h: function\n    render_axis_v: function\n    render_bg: function\n    render_fg: function\n    setup_data: function\n    setup_layout: function\n    setup_panel_guides: function\n    setup_panel_params: function\n    setup_params: function\n    train_panel_guides: function\n    transform: function\n    super:  &lt;ggproto object: Class CoordCartesian, Coord, gg&gt; \n $ facet      :Classes 'FacetNull', 'Facet', 'ggproto', 'gg' &lt;ggproto object: Class FacetNull, Facet, gg&gt;\n    compute_layout: function\n    draw_back: function\n    draw_front: function\n    draw_labels: function\n    draw_panels: function\n    finish_data: function\n    init_scales: function\n    map_data: function\n    params: list\n    setup_data: function\n    setup_params: function\n    shrink: TRUE\n    train_scales: function\n    vars: function\n    super:  &lt;ggproto object: Class FacetNull, Facet, gg&gt; \n $ plot_env   :&lt;environment: R_GlobalEnv&gt; \n $ labels     :List of 4\n  ..$ title   : chr \"Title\"\n  ..$ subtitle: chr \"This is a long subtitle that spans multiple lines and serves as a nice demonstratation for this\\nexample about \"| __truncated__\n  ..$ x       : chr \"pop\"\n  ..$ y       : chr \"unemploy\"\n - attr(*, \"class\")= chr [1:2] \"gg\" \"ggplot\"\n\n\nHere, we can see and access all the elements that make up the plot (e.g., scales, data, etc.). The subtitle can be accessed like so:\n\nsubtitle &lt;- example$labels$subtitle\n\nWe could then write a wrapper function to detect whether our subtitle is multiline and change the height of ggsave() accordingly:\n\nggsave_multline &lt;- function(...) {\n  height &lt;- ifelse(grepl(\"\\\\n\", subtitle), 11, 10)\n  ggsave(height = height, ...)\n}",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Inspecting ggplot2 objects</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-objects.html#what-other-solutions-exist",
+    "href": "ggplot2-objects.html#what-other-solutions-exist",
+    "title": "3  Inspecting ggplot2 objects",
+    "section": "3.4 What other solutions exist?",
+    "text": "3.4 What other solutions exist?\nggplot2 provides a set of functions to render plot objects, which can also be used to inspect the underlying data and panel object. These functions do not appear in the documentation index however, and so are not easily discoverable. For a deeper diver on these functions and the internals of ggplot objects, see this chapter in the book “ggplot2: Elegant Graphics for Data Analysis (3e)”.",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Inspecting ggplot2 objects</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-panel-sizes.html",
+    "href": "ggplot2-panel-sizes.html",
+    "title": "4  Panel sizes",
+    "section": "",
+    "text": "4.1 What is the problem?\nThere is no default method to set the panel size of a plot in ggplot2, only a method to set the plot size using the width and height paramaeters of ggplot2::ggsave(). The panel refers to the inner plotting window that contains the data, and the plot refers to the whole plotting window that contains both the panel and all other elements (e.g., legeneds, labels, etc.):",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Panel sizes</span>"
+    ]
+  },
+  {
+    "objectID": "ggplot2-panel-sizes.html#what-is-a-solution",
+    "href": "ggplot2-panel-sizes.html#what-is-a-solution",
+    "title": "4  Panel sizes",
+    "section": "4.2 What is a solution?",
+    "text": "4.2 What is a solution?\nThe ggh4x::force_panelsizes() function can be used to coerce a single panel to a set size:\n\nlibrary(ggplot2)\n\nggplot(economics, aes(x = pop, y = unemploy)) +\n  geom_point() +\n  ggh4x::force_panelsizes(\n    rows = unit(8, \"cm\"),\n    cols = unit(12, \"cm\")\n  )",
+    "crumbs": [
+      "ggplot2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Panel sizes</span>"
+    ]
+  },
+  {
     "objectID": "utilities-consecutive-trues.html",
     "href": "utilities-consecutive-trues.html",
     "title": "5  Consecutive true values",
@@ -41,28 +193,6 @@
     "crumbs": [
       "Utilities",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Consecutive true values</span>"
-    ]
-  },
-  {
-    "objectID": "ggplot2-panel-sizes.html",
-    "href": "ggplot2-panel-sizes.html",
-    "title": "4  Panel sizes",
-    "section": "",
-    "text": "4.1 What is the problem?\nThere is no default method to set the panel size of a plot in ggplot2, only a method to set the plot size using the width and height paramaeters of ggplot2::ggsave(). The panel refers to the inner plotting window that contains the data, and the plot refers to the whole plotting window that contains both the panel and all other elements (e.g., legeneds, labels, etc.):",
-    "crumbs": [
-      "ggplot2",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Panel sizes</span>"
-    ]
-  },
-  {
-    "objectID": "ggplot2-panel-sizes.html#what-is-a-solution",
-    "href": "ggplot2-panel-sizes.html#what-is-a-solution",
-    "title": "4  Panel sizes",
-    "section": "4.2 What is a solution?",
-    "text": "4.2 What is a solution?\nThe ggh4x::force_panelsizes() function can be used to coerce a single panel to a set size:\n\nlibrary(ggplot2)\n\nggplot(economics, aes(x = pop, y = unemploy)) +\n  geom_point() +\n  ggh4x::force_panelsizes(\n    rows = unit(8, \"cm\"),\n    cols = unit(12, \"cm\")\n  )",
-    "crumbs": [
-      "ggplot2",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Panel sizes</span>"
     ]
   }
 ]
