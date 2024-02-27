@@ -32,50 +32,11 @@ library(tibble)
 library(dplyr)
 
 df |>
-  mutate(id = consecutive_id(x)) |>
-  add_count(id) |>
-  mutate(consecutive_trues = seq(n(), 1), .by = id) |>
-  mutate(
-    consecutive_trues = case_when(
-      is.na(x) ~ NA_integer_,
-      x ~ consecutive_trues,
-      .default = 0
-    )
-  ) |>
-  select(-id, -n)
+  mutate(consecutive_trues = consecutive_id(x)) |>
+  mutate(consecutive_trues = seq(n(), 1), .by = consecutive_trues) |>
+  mutate(consecutive_trues = if_else(x, consecutive_trues, 0))
 ```
 
 To reverse the order of the count of `TRUE` values, that is, to count the
 number of trailing `TRUE` values, the order of the sequence can simply be
 switched.
-
-## What are alternate solutions?
-For a generalised solution that works with any vector, outside the context of
-a data frame:
-
-```{r}
-consecutive_trues <- function(x) {
-  result <- integer(length(x))
-  current_total <- 0
-
-  for (i in seq_along(x)) {
-    if (is.na(x[i])) {
-      result[i] <- NA_integer_
-      current_total <- 0
-    } else if (x[i]) {
-      j <- i
-      while (isTRUE(x[j])) {
-        current_total <- current_total + 1
-        j <- j + 1
-      }
-      result[i] <- current_total
-      current_total <- 0
-    } else {
-      current_total <- 0
-      result[i] <- current_total
-    }
-  }
-
-  return(result)
-}
-```

@@ -178,18 +178,7 @@
     "href": "utilities-consecutive-trues.html#what-is-a-solution",
     "title": "5  Consecutive true values",
     "section": "5.3 What is a solution?",
-    "text": "5.3 What is a solution?\nWe can leverage the dplyr::consecutive_id() function to create unique group id’s, and then create sequences along these id’s:\n\nlibrary(tibble)\nlibrary(dplyr)\n\ndf |&gt;\n  mutate(id = consecutive_id(x)) |&gt;\n  add_count(id) |&gt;\n  mutate(consecutive_trues = seq(n(), 1), .by = id) |&gt;\n  mutate(\n    consecutive_trues = case_when(\n      is.na(x) ~ NA_integer_,\n      x ~ consecutive_trues,\n      .default = 0\n    )\n  ) |&gt;\n  select(-id, -n)\n\n# A tibble: 8 × 2\n  x     consecutive_trues\n  &lt;lgl&gt;             &lt;dbl&gt;\n1 TRUE                  2\n2 TRUE                  1\n3 NA                   NA\n4 TRUE                  1\n5 FALSE                 0\n6 TRUE                  3\n7 TRUE                  2\n8 TRUE                  1\n\n\nTo reverse the order of the count of TRUE values, that is, to count the number of trailing TRUE values, the order of the sequence can simply be switched.",
-    "crumbs": [
-      "Utilities",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Consecutive true values</span>"
-    ]
-  },
-  {
-    "objectID": "utilities-consecutive-trues.html#what-are-alternate-solutions",
-    "href": "utilities-consecutive-trues.html#what-are-alternate-solutions",
-    "title": "5  Consecutive true values",
-    "section": "5.4 What are alternate solutions?",
-    "text": "5.4 What are alternate solutions?\nFor a generalised solution that works with any vector, outside the context of a data frame:\n\nconsecutive_trues &lt;- function(x) {\n  result &lt;- integer(length(x))\n  current_total &lt;- 0\n\n  for (i in seq_along(x)) {\n    if (is.na(x[i])) {\n      result[i] &lt;- NA_integer_\n      current_total &lt;- 0\n    } else if (x[i]) {\n      j &lt;- i\n      while (isTRUE(x[j])) {\n        current_total &lt;- current_total + 1\n        j &lt;- j + 1\n      }\n      result[i] &lt;- current_total\n      current_total &lt;- 0\n    } else {\n      current_total &lt;- 0\n      result[i] &lt;- current_total\n    }\n  }\n\n  return(result)\n}",
+    "text": "5.3 What is a solution?\nWe can leverage the dplyr::consecutive_id() function to create unique group id’s, and then create sequences along these id’s:\n\nlibrary(tibble)\nlibrary(dplyr)\n\ndf |&gt;\n  mutate(consecutive_trues = consecutive_id(x)) |&gt;\n  mutate(consecutive_trues = seq(n(), 1), .by = consecutive_trues) |&gt;\n  mutate(consecutive_trues = if_else(x, consecutive_trues, 0))\n\n# A tibble: 8 × 2\n  x     consecutive_trues\n  &lt;lgl&gt;             &lt;dbl&gt;\n1 TRUE                  2\n2 TRUE                  1\n3 NA                   NA\n4 TRUE                  1\n5 FALSE                 0\n6 TRUE                  3\n7 TRUE                  2\n8 TRUE                  1\n\n\nTo reverse the order of the count of TRUE values, that is, to count the number of trailing TRUE values, the order of the sequence can simply be switched.",
     "crumbs": [
       "Utilities",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Consecutive true values</span>"
